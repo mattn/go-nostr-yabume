@@ -2,9 +2,8 @@ package main
 
 import (
 	"context"
-	"io"
+	"fmt"
 	"log"
-	"os"
 
 	"github.com/mattn/go-nostr-yabume"
 )
@@ -21,5 +20,10 @@ func main() {
 	}
 	defer resp.Body.Close()
 
-	io.Copy(os.Stdout, resp.Body)
+	eventId, err := yabume.ParseGetV0EventsIdResponse(resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	ev := eventId.JSON200
+	fmt.Println(ev.Content)
 }
